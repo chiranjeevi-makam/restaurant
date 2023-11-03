@@ -1,0 +1,84 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.menu {
+  border: 1px solid black;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+  background-color: #ffffff;
+}
+.main_head {
+  color: black;
+  font-weight: bold;
+}
+.category {
+  list-style-type: none;
+  display: flex;
+  justify-content: space-between;
+}
+.menuButton {
+  border: none;
+  background-color: transparent;
+}
+.menudex {
+  border: none;
+  background-color: transparent;
+  color: orange;
+  text-decoration: underline;
+}
+
+.displayList {
+  list-style-type: none;
+}
+.item {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border: 1px solid gray;
+  padding: 16px;
+  margin: 1px;
+}
+.imagewidth {
+  width: 30%;
+}
+.calories {
+  color: orange;
+  font-family: 'Roboto';
+}
+.list_head {
+  font-weight: bold;
+  color: black;
+  font-family: 'Roboto';
+}
+.describe {
+  color: grey;
+  font-family: 'Roboto';
+}
+.quantity {
+  width: 150px;
+  background-color: green;
+  border-radius: 30px;
+  display: flex;
+  color: hsl(0, 0%, 100%);
+  justify-content: space-around;
+}
+.not {
+  color: red;
+}
+.customization {
+  background-color: transparent;
+  border: none;
+  color: #ffffff;
+}
