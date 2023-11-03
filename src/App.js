@@ -1,11 +1,15 @@
 import {Component} from 'react'
 import './App.css'
 
+import {AiOutlineShoppingCart} from 'react-icons/ai'
+
 class App extends Component {
   state = {
     total: [],
     active: 'Salads and Soup',
     displayData: [],
+    name: '',
+    cart: {},
   }
 
   componentDidMount() {
@@ -25,12 +29,18 @@ class App extends Component {
 
     const response = await fetch(url, position)
     const data = await response.json()
+    console.log(data)
     const array = data.map(each => ({
       tableMenuList: each.table_menu_list,
+      restaurantName: each.restaurant_name,
     }))
+    console.log(array)
     const totalDetails = array[0]
 
-    const {tableMenuList} = totalDetails
+    const {tableMenuList, restaurantName} = totalDetails
+    this.setState({name: restaurantName})
+    console.log(restaurantName)
+    console.log('tableMenuList', tableMenuList)
     const forMat = tableMenuList.map(each => ({
       categoryDishes: each.category_dishes.map(each1 => ({
         dishId: each1.dish_id,
@@ -43,13 +53,15 @@ class App extends Component {
         dishPrice: each1.dish_price,
         dishDescription: each1.dish_description,
         nexturl: each1.nexturl,
+        addonCat: each1.addonCat,
       })),
+
       menuCategory: each.menu_category,
       menuCategoryId: each.menu_category_id,
       menuCategoryImage: each.menu_category_image,
       nexturl: each.nexturl,
     }))
-
+    console.log('forMat:-->', forMat)
     this.setState({total: forMat})
     const single = forMat[0]
     const {categoryDishes} = single
@@ -66,34 +78,60 @@ class App extends Component {
   }
 
   updateQuantity = (dishId, quantityChange) => {
-    const {displayData} = this.state
+    const {displayData, cart} = this.state
+
     const updatedDisplayData = displayData.map(dish => {
       if (dish.dishId === dishId) {
         const currentQuantity = dish.quantity || 0
-        const newQuantity = currentQuantity + quantityChange
+        const newQuantity = Math.max(currentQuantity + quantityChange, 0)
 
-        return {...dish, quantity: Math.max(newQuantity, 0)}
+        if (newQuantity > 0) {
+          cart[dishId] = newQuantity
+        } else {
+          delete cart[dishId]
+        }
+
+        return {...dish, quantity: newQuantity}
       }
       return dish
     })
 
-    this.setState({displayData: updatedDisplayData})
+    this.setState({displayData: updatedDisplayData, cart})
+  }
+
+  calculateCartCount = () => {
+    const {cart} = this.state
+    const cartCount = Object.values(cart).reduce(
+      (acc, quantity) => acc + quantity,
+      0,
+    )
+    return cartCount
   }
 
   render() {
-    const {total, active, displayData} = this.state
+    const {total, active, displayData, name} = this.state
+    const cartCount = this.calculateCartCount()
+
     return (
       <div className="menu">
         <nav className="header">
-          <h1 className="main_head">UNI Resto Cafe</h1>
-          <h1>My Orders</h1>
+          <h1 className="main_head" key={name}>
+            {name}
+          </h1>
+          <div className="order">
+            <h1>My Orders</h1>
+            <h1 className="cart-icon">
+              {' '}
+              <AiOutlineShoppingCart />{' '}
+              <span className="count">{cartCount}</span>{' '}
+            </h1>
+          </div>
         </nav>
         <ul className="category">
           {total.map(object => (
-            <li>
+            <li key={object.menuCategory}>
               <button
                 type="button"
-                key={object.menuCategory}
                 className={
                   object.menuCategory === active ? 'menudex' : 'menuButton'
                 }
@@ -108,11 +146,15 @@ class App extends Component {
           {displayData.map(dish => (
             <li key={dish.dishId} className="item">
               <div>
-                <p className="list_head">{dish.dishName}</p>
-                <p>
+                <h1 className="list_head" key={dish.dishName}>
+                  {dish.dishName}
+                </h1>
+                <p key={`${dish.dishCurrency}${dish.dishPrice}`}>
                   {dish.dishCurrency} {dish.dishPrice}
                 </p>
-                <p className="describe">{dish.dishDescription}</p>
+                <p className="describe" key={dish.dishDescription}>
+                  {dish.dishDescription}
+                </p>
                 {dish.dishAvailability ? (
                   <div className="quantity">
                     <button
@@ -134,8 +176,14 @@ class App extends Component {
                 ) : (
                   <p className="not">Not Available</p>
                 )}
+                {dish.addonCat.length > 0 ? (
+                  <p style={{color: 'blue'}}>Customizations available</p>
+                ) : null}
               </div>
-              <p className="calories">{dish.dishCalories} calories</p>
+
+              <p className="calories" key={dish.dishCalories}>
+                {dish.dishCalories} calories
+              </p>
               <img
                 src={dish.dishImage}
                 alt={dish.dishName}
