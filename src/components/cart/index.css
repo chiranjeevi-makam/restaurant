@@ -1,0 +1,41 @@
+.cartContainer {
+  background-color: #ffffff;
+}
+.unorderList {
+  list-style-type: none;
+}
+.list_show {
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid grey;
+  align-items: center;
+  margin: 10px;
+}
+.cartButtons {
+  display: flex;
+  background-color: blue;
+  height: 40px;
+  width: 80px;
+  border-radius: 10px;
+  color: #ffffff;
+  justify-content: space-between;
+  align-items: center;
+}
+.cartImageSize {
+  width: 50%;
+}
+.btncart {
+  height: 30px;
+  background-color: transparent;
+  border: none;
+  color: #ffffff;
+}
+.crossMark {
+  border: none;
+  background-color: transparent;
+  border: 10px;
+  color: black;
+}
+.empty {
+  text-align: center;
+}

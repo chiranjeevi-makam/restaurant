@@ -1,0 +1,33 @@
+.headerContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.cartAndName {
+  display: flex;
+  justify-content: space-around;
+}
+.restaurantName {
+  text-decoration: none;
+}
+.count {
+  background-color: red;
+  color: #ffffff;
+  font-size: 16px;
+  border-radius: 100px;
+  padding: 5px;
+}
+.cartName {
+  display: flex;
+  justify-content: space-around;
+  text-decoration: none;
+}
+
+.logbtn {
+  background-color: yellow;
+  border-radius: 10px;
+  color: red;
+  margin: 1px;
+  height: 30px;
+  margin-top: 8px;
+}
