@@ -19,11 +19,11 @@ const Header = props => {
   return (
     <CartContext.Consumer>
       {value => {
-        const {cartList} = value
+        const {cartList, cafeName} = value
         return (
           <nav className="headerContainer ">
             <Link to="/" className="restaurantName">
-              <h1 key="UNI Resto Cafe">UNI Resto Cafe</h1>
+              <h1 key={cafeName}>{cafeName}</h1>
             </Link>
 
             <div className="cartAndName">

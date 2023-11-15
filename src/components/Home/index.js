@@ -32,6 +32,7 @@ class Home extends Component {
     console.log(data)
     const array = data.map(each => ({
       tableMenuList: each.table_menu_list,
+      restaurantName: each.restaurant_name,
     }))
 
     const totalDetails = array[0]

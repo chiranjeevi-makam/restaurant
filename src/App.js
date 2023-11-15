@@ -8,6 +8,35 @@ import Cart from './components/cart'
 class App extends Component {
   state = {
     cartList: [],
+    cafeName: '',
+  }
+
+  componentDidMount() {
+    this.getDetails1()
+  }
+
+  getDetails1 = async () => {
+    const url = 'https://run.mocky.io/v3/77a7e71b-804a-4fbd-822c-3e365d3482cc'
+
+    const position = {
+      method: 'GET',
+      headers: {
+        Authorization:
+          'Bearer 04e1354175f2f641a3943387d4203e1591c9ae05126da0ef1f454084e2a23477',
+      },
+    }
+
+    const response = await fetch(url, position)
+    const data = await response.json()
+
+    const array = data.map(each1 => ({
+      restaurantName: each1.restaurant_name,
+    }))
+
+    const totalDetails = array[0]
+
+    const {restaurantName} = totalDetails
+    this.setState({cafeName: restaurantName})
   }
 
   removeAllCartItems = () => {
@@ -81,12 +110,14 @@ class App extends Component {
   }
 
   render() {
-    const {cartList} = this.state
+    const {cartList, cafeName} = this.state
 
     return (
       <CartContext.Provider
         value={{
           cartList,
+          cafeName,
+
           addCartItem: this.addCartItem,
           removeCartItem: this.removeCartItem,
           incrementCartItemQuantity: this.incrementCartItemQuantity,
