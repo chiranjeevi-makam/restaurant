@@ -1,9 +1,11 @@
 import {Component} from 'react'
-import {Switch, BrowserRouter, Route} from 'react-router-dom'
+import {Switch, BrowserRouter, Redirect, Route} from 'react-router-dom'
 import Home from './components/Home'
 import Login from './components/Login'
-import CartContext from './context/cartContext'
-import Cart from './components/cart'
+import CartContext from './context/CartContext'
+import Cart from './components/Cart'
+import ProtectedRoute from './components/ProtectedRoute'
+import NotFound from './components/NotFound'
 
 class App extends Component {
   state = {
@@ -13,6 +15,10 @@ class App extends Component {
 
   componentDidMount() {
     this.getDetails1()
+  }
+
+  changeCafeName = word => {
+    this.setState({cafeName: word})
   }
 
   getDetails1 = async () => {
@@ -123,13 +129,16 @@ class App extends Component {
           incrementCartItemQuantity: this.incrementCartItemQuantity,
           decrementCartItemQuantity: this.decrementCartItemQuantity,
           removeAllCartItems: this.removeAllCartItems,
+          changeCafeName: this.changeCafeName,
         }}
       >
         <BrowserRouter>
           <Switch>
             <Route exact path="/login" component={Login} />
-            <Route exact path="/" component={Home} />
-            <Route exact path="/cart" component={Cart} />
+            <ProtectedRoute exact path="/" component={Home} />
+            <ProtectedRoute exact path="/cart" component={Cart} />
+            <ProtectedRoute path="/not-found" component={NotFound} />
+            <Redirect to="/not-found" />
           </Switch>
         </BrowserRouter>
       </CartContext.Provider>

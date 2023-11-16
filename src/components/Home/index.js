@@ -3,7 +3,7 @@ import './index.css'
 
 import Header from '../Header'
 
-import CartContex from '../../context/cartContext'
+import CartContex from '../../context/CartContext'
 
 class Home extends Component {
   state = {

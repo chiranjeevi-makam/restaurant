@@ -6,7 +6,7 @@ import Cookies from 'js-cookie'
 
 import {AiOutlineShoppingCart} from 'react-icons/ai'
 
-import CartContext from '../../context/cartContext'
+import CartContext from '../../context/CartContext'
 
 const Header = props => {
   const onClickLogout = () => {
