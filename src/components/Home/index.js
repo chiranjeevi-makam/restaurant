@@ -1,4 +1,5 @@
 import {Component} from 'react'
+import Loader from 'react-loader-spinner'
 import './index.css'
 
 import Header from '../Header'
@@ -10,6 +11,7 @@ class Home extends Component {
     total: [],
     active: 'Salads and Soup',
     displayData: [],
+    status: true,
   }
 
   componentDidMount() {
@@ -61,7 +63,7 @@ class Home extends Component {
       nexturl: each.nexturl,
     }))
     console.log('forMat:-->', forMat)
-    this.setState({total: forMat})
+    this.setState({total: forMat, status: false})
     const single = forMat[0]
     const {categoryDishes} = single
     this.setState({displayData: categoryDishes})
@@ -97,7 +99,7 @@ class Home extends Component {
   }
 
   render() {
-    const {total, active, displayData} = this.state
+    const {total, active, displayData, status} = this.state
 
     return (
       <CartContex.Consumer>
@@ -111,6 +113,16 @@ class Home extends Component {
           return (
             <div className="menu">
               <Header />
+              {status ? (
+                <div className="loader-container">
+                  <Loader
+                    type="TailSpin"
+                    color="#D81F26"
+                    height={50}
+                    width={50}
+                  />
+                </div>
+              ) : null}
               <ul className="category">
                 {total.map(object => (
                   <li key={object.menuCategory}>
@@ -169,10 +181,12 @@ class Home extends Component {
                         <p className="not">Not Available</p>
                       )}
                       {dish.addonCat.length > 0 ? (
-                        <p style={{color: 'blue'}}>Customizations available</p>
+                        <p style={{color: 'blue'}} key="addonCat">
+                          Customizations available
+                        </p>
                       ) : null}
 
-                      {dish.dishAvailability ? (
+                      {dish.dishAvailability && dish.quantity ? (
                         <button
                           type="button"
                           onClick={() => {
