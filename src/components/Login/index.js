@@ -20,9 +20,8 @@ class Login extends Component {
   success = jwtToken => {
     const {history} = this.props
 
-    setTimeout(() => {
-      history.replace('/')
-    }, 0)
+    history.replace('/')
+
     Cookies.set('jwt_token', jwtToken, {expires: 10})
   }
 
