@@ -30,15 +30,16 @@ const Cart = () => (
           )}
           <ul className="unorderList">
             {cartList.map(item => (
-              <li className="list_show">
+              <li className="list_show" key={item.dishName}>
                 <div>
                   <img
                     src={item.dishImage}
                     alt={item.dishName}
                     className="cartImageSize"
                   />
-                  <p>{item.dishName}</p>
                 </div>
+                <p>{item.dishName}</p>
+                <p>Price:{item.quantity * item.dishPrice}</p>
                 <div className="cartButtons">
                   <button
                     type="button"
@@ -67,7 +68,7 @@ const Cart = () => (
                     removeCartItem(item.dishId)
                   }}
                 >
-                  X
+                  Remove
                 </button>
               </li>
             ))}

@@ -13,10 +13,6 @@ class App extends Component {
     cafeName: '',
   }
 
-  componentDidMount() {
-    this.getDetails1()
-  }
-
   changeCafeName = word => {
     this.setState({cafeName: word})
   }
@@ -66,7 +62,7 @@ class App extends Component {
     const productObject = cartList.find(
       eachCartItem => eachCartItem.dishId === dishId,
     )
-    if (productObject.quantity > 1) {
+    if (productObject && productObject.quantity > 1) {
       this.setState(prevState => ({
         cartList: prevState.cartList.map(eachCartItem => {
           if (dishId === eachCartItem.dishId) {

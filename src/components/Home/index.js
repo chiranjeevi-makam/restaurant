@@ -1,21 +1,36 @@
 import {Component} from 'react'
 import Loader from 'react-loader-spinner'
 import './index.css'
+import {AiOutlineShoppingCart} from 'react-icons/ai'
+import Cookies from 'js-cookie'
 
-import Header from '../Header'
+import {Link} from 'react-router-dom'
 
 import CartContex from '../../context/CartContext'
+
+const initial = {
+  loading: 'load',
+  success: 'success',
+}
 
 class Home extends Component {
   state = {
     total: [],
     active: 'Salads and Soup',
     displayData: [],
-    status: true,
+    status: initial.loading,
+    cafeName: '',
   }
 
   componentDidMount() {
     this.getDetails()
+  }
+
+  onClickLogout = () => {
+    const {history} = this.props
+
+    Cookies.remove('jwt_token')
+    history.replace('/login')
   }
 
   getDetails = async () => {
@@ -39,7 +54,8 @@ class Home extends Component {
 
     const totalDetails = array[0]
 
-    const {tableMenuList} = totalDetails
+    const {tableMenuList, restaurantName} = totalDetails
+    this.setState({cafeName: restaurantName})
 
     const forMat = tableMenuList.map(each => ({
       categoryDishes: each.category_dishes.map(each1 => ({
@@ -63,7 +79,7 @@ class Home extends Component {
       nexturl: each.nexturl,
     }))
     console.log('forMat:-->', forMat)
-    this.setState({total: forMat, status: false})
+    this.setState({total: forMat, status: initial.success})
     const single = forMat[0]
     const {categoryDishes} = single
     this.setState({displayData: categoryDishes})
@@ -87,20 +103,25 @@ class Home extends Component {
     })
   }
 
-  decreaseQuantity = dishId => {
+  decrementCartItemQuantity = dishId => {
     const {displayData} = this.state
     this.setState({
       displayData: displayData.map(data =>
-        data.dishId === dishId && data.quantity > 0
+        data.dishId === dishId && data.quantity !== 0
           ? {...data, quantity: data.quantity - 1}
           : data,
       ),
     })
   }
 
-  render() {
-    const {total, active, displayData, status} = this.state
+  loaingView = () => (
+    <div className="loader-container">
+      <Loader type="TailSpin" color="#D81F26" height={50} width={50} />
+    </div>
+  )
 
+  successView = () => {
+    const {total, active, displayData, cafeName} = this.state
     return (
       <CartContex.Consumer>
         {value => {
@@ -108,21 +129,33 @@ class Home extends Component {
             addCartItem,
             incrementCartItemQuantity,
             decrementCartItemQuantity,
+            cartList,
           } = value
 
           return (
             <div className="menu">
-              <Header />
-              {status ? (
-                <div className="loader-container">
-                  <Loader
-                    type="TailSpin"
-                    color="#D81F26"
-                    height={50}
-                    width={50}
-                  />
+              <nav className="headerContainer ">
+                <Link to="/" className="restaurantName">
+                  <h1 key={cafeName}>{cafeName}</h1>
+                </Link>
+
+                <div className="cartAndName">
+                  <p>My Orders</p>
+                  <Link to="/cart" className="cartName">
+                    <h1>
+                      <AiOutlineShoppingCart />{' '}
+                      <span className="count">{cartList.length}</span>
+                    </h1>
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={this.onClickLogout}
+                    className="logbtn"
+                  >
+                    LogOut
+                  </button>
                 </div>
-              ) : null}
+              </nav>
               <ul className="category">
                 {total.map(object => (
                   <li key={object.menuCategory}>
@@ -134,6 +167,7 @@ class Home extends Component {
                           : 'menuButton'
                       }
                       onClick={() => this.getDisplay(object.menuCategory)}
+                      key={object.menuCategory}
                     >
                       {object.menuCategory}
                     </button>
@@ -143,7 +177,7 @@ class Home extends Component {
               <ul className="displayList">
                 {displayData.map(dish => (
                   <li key={dish.dishId} className="item">
-                    <div>
+                    <div key={dish.dishId}>
                       <h1 className="list_head" key={dish.dishName}>
                         {dish.dishName}
                       </h1>
@@ -159,22 +193,22 @@ class Home extends Component {
                             type="button"
                             className="customization"
                             onClick={() => {
+                              this.decrementCartItemQuantity(dish.dishId)
+                              decrementCartItemQuantity(dish.dishId)
+                            }}
+                          >
+                            -
+                          </button>{' '}
+                          <p>{dish.quantity || 0}</p>
+                          <button
+                            type="button"
+                            className="customization"
+                            onClick={() => {
                               this.increaseQuantity(dish.dishId)
                               incrementCartItemQuantity(dish.dishId)
                             }}
                           >
                             +
-                          </button>{' '}
-                          <p>{dish.quantity}</p>
-                          <button
-                            type="button"
-                            className="customization"
-                            onClick={() => {
-                              this.decreaseQuantity(dish.dishId)
-                              decrementCartItemQuantity(dish.dishId)
-                            }}
-                          >
-                            -
                           </button>
                         </div>
                       ) : (
@@ -204,6 +238,7 @@ class Home extends Component {
                     <img
                       src={dish.dishImage}
                       alt={dish.dishName}
+                      key={dish.dishName}
                       className="imagewidth"
                     />
                   </li>
@@ -214,6 +249,24 @@ class Home extends Component {
         }}
       </CartContex.Consumer>
     )
+  }
+
+  renderView = () => {
+    const {status} = this.state
+
+    switch (status) {
+      case 'load':
+        return this.loaingView()
+
+      case 'success':
+        return this.successView()
+      default:
+        return null
+    }
+  }
+
+  render() {
+    return this.renderView()
   }
 }
 

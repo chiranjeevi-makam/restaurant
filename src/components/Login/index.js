@@ -18,11 +18,14 @@ class Login extends Component {
   }
 
   success = jwtToken => {
+    console.log('first')
     const {history} = this.props
+    Cookies.set('jwt_token', jwtToken, {
+      expires: 30,
+      path: '/',
+    })
 
     history.replace('/')
-
-    Cookies.set('jwt_token', jwtToken, {expires: 10})
   }
 
   fail = e => {
