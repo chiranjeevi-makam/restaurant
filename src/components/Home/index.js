@@ -199,7 +199,7 @@ class Home extends Component {
                           >
                             -
                           </button>{' '}
-                          <p>{dish.quantity || 0}</p>
+                          <p>{dish.quantity}</p>
                           <button
                             type="button"
                             className="customization"
